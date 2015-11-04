@@ -1,6 +1,7 @@
 package beginner;
 
 import java.io.IOException;
+import java.lang.RuntimeException;
 
 import com.sandwich.koan.Koan;
 import static com.sandwich.koan.constant.KoanConstants.__;
@@ -21,7 +22,7 @@ public class AboutExceptions {
 		} catch(IOException e) { 
 			s = "exception thrown";
 		}
-		assertEquals(s, __);
+		assertEquals(s, "exception thrown");
 	}
 	
 	@Koan
@@ -35,7 +36,7 @@ public class AboutExceptions {
 		} finally {
 			s += " and finally ran as well";
 		}
-		assertEquals(s, __);
+		assertEquals(s, "exception thrown and finally ran as well");
 	}
 	
 	@Koan
@@ -46,7 +47,7 @@ public class AboutExceptions {
 		} finally {
 			s += " and finally ran as well";
 		}
-		assertEquals(s, __);
+		assertEquals(s, "code ran normally and finally ran as well");
 	}
 	
 	private void tryCatchFinallyWithVoidReturn(StringBuilder whatHappened) {
@@ -65,7 +66,7 @@ public class AboutExceptions {
 	public void finallyIsAlwaysRan() {
 		StringBuilder whatHappened = new StringBuilder();
 		tryCatchFinallyWithVoidReturn(whatHappened);
-		assertEquals(whatHappened.toString(), __);
+		assertEquals(whatHappened.toString(), "did something dangerous; the catch block executed, but so did the finally!");
 	}
 	
 	@SuppressWarnings("finally") // this is suppressed because returning in finally block is obviously a compiler warning
@@ -80,7 +81,7 @@ public class AboutExceptions {
 		} finally {
 			whatHappened.append(", finally");
 			// Think about how bad an idea it is to put a return statement in the finally block
-			// DO NOT DO THIS!
+			// DO NOT DO THIS! you'll never know if the value you got back came from the code, or if you hit an exception
 			return "from finally";
 		}
 	}
@@ -89,8 +90,8 @@ public class AboutExceptions {
 	public void returnInFinallyBlock() {
 		StringBuilder whatHappened = new StringBuilder();
 		// Which value will be returned here?
-		assertEquals(returnStatementsEverywhere(whatHappened), __);
-		assertEquals(whatHappened.toString(), __);
+		assertEquals(returnStatementsEverywhere(whatHappened), "from finally");
+		assertEquals(whatHappened.toString(), "try, catch, finally");
 	}
 	
 	private void doUncheckedStuff() {
@@ -99,8 +100,13 @@ public class AboutExceptions {
 	
 	@Koan
 	public void catchUncheckedExceptions() {
-		// What do you need to do to catch the unchecked exception?
-		doUncheckedStuff();
+		// What do you need to do to catch the unchecked exception? write a catch
+        try{
+            doUncheckedStuff();
+        }
+		catch (RuntimeException e){
+            return;
+        }
 	}
 	
 	@SuppressWarnings("serial")
@@ -122,7 +128,7 @@ public class AboutExceptions {
 		} catch(ParentException e) {
 			s = "ParentException";
 		}
-		assertEquals(s, __);
+		assertEquals(s, "ChildException");
 	}	
 
 	@Koan
@@ -134,7 +140,7 @@ public class AboutExceptions {
 		} catch (IllegalArgumentException ex) {
 			s = "caught an IllegalArgumentException";
 		}
-		assertEquals(s, __);
+		assertEquals(s, "caught an IllegalArgumentException");
 	}
 	
 	@Koan
@@ -146,7 +152,7 @@ public class AboutExceptions {
 		} catch (IllegalArgumentException ex) {
 			s = "caught an IllegalArgumentException";
 		}
-		assertEquals(s, __);
+		assertEquals(s, "5");
 	}
 
 	private int validateUsingIllegalArgumentException(String str) {
